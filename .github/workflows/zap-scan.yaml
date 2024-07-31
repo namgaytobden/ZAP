@@ -2,11 +2,6 @@ name: ZAP Scan
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: Docker Image Tag
-        default: latest
-        required: true
 
 jobs:
   build:
