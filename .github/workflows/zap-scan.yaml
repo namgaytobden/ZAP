@@ -17,4 +17,4 @@ jobs:
           target: 'https://btngaming.com'
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
-          allow_issue_writing: "false"
+          allow_issue_writing: "true"
