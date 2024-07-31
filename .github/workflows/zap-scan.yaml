@@ -1,0 +1,19 @@
+name: ZAP Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Docker Image Tag
+        default: latest
+        required: true
+
+jobs:
+  build:
+    name: PEN test
+    runs-on: ubuntu-latest
+    steps:
+        - name: ZAP Scan
+          uses: zaproxy/action-full-scan@v0.10.0
+          with:
+            target: 'https://www.zaproxy.org/'
