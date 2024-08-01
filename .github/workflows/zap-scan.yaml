@@ -1,5 +1,10 @@
-on: [push]
-
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Enter URL'
+        required: true
+        default: 'https://example.com'
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
@@ -16,54 +21,56 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
-          target: 'https://btngaming.com'
+          target: ${{ github.event.inputs.url }}
           rules_file_name: '.zap/rules.tsv'
           cmd_options: '-a'
           allow_issue_writing: "false"
           fail_action: "false"
-          report_file: 'report_html.html' 
+          report_file: 'report_html.html'  # Save report to this file
 
-      - name: Check for High, Medium, Low Alerts
-        id: check-alerts
-        run: |
-          if [ -f "report_html.html" ]; then
-            # Extract the relevant alert counts from the HTML report
-            high_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "High" | awk '{print $4}')
-            medium_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "Medium" | awk '{print $4}')
-            low_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "Low" | awk '{print $4}')
+      # - name: Check for High, Medium, Low Alerts
+      #   id: check-alerts
+      #   run: |
+      #     # Ensure the ZAP scan report is present
+      #     if [ -f "report_html.html" ]; then
+      #       # Extract the relevant alert counts from the HTML report
+      #       high_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "High" | awk '{print $4}')
+      #       medium_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "Medium" | awk '{print $4}')
+      #       low_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "Low" | awk '{print $4}')
 
-            echo "HIGH_ALERTS=${high_alerts}" >> $GITHUB_ENV
-            echo "MEDIUM_ALERTS=${medium_alerts}" >> $GITHUB_ENV
-            echo "LOW_ALERTS=${low_alerts}" >> $GITHUB_ENV
+      #       echo "HIGH_ALERTS=${high_alerts}" >> $GITHUB_ENV
+      #       echo "MEDIUM_ALERTS=${medium_alerts}" >> $GITHUB_ENV
+      #       echo "LOW_ALERTS=${low_alerts}" >> $GITHUB_ENV
 
-            if [ "$high_alerts" -gt 0 ] || [ "$medium_alerts" -gt 0 ] || [ "$low_alerts" -gt 0 ]; then
-              echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
-            else
-              echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
-            fi
-          else
-            echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
-            echo "No ZAP scan report found."
-          fi
+      #       # Determine if any alerts are present
+      #       if [ "$high_alerts" -gt 0 ] || [ "$medium_alerts" -gt 0 ] || [ "$low_alerts" -gt 0 ]; then
+      #         echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
+      #       else
+      #         echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
+      #       fi
+      #     else
+      #       echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
+      #       echo "No ZAP scan report found."
+      #     fi
 
       # - name: Rsync
       #   run: |
       #       mkdir zap_report && cp report_html.html zap_report/. && mv zap_report/report_html.html zap_report/report_${{ github.sha }}.html
       #       rsync -avz ./zap_report/report_${{ github.sha }}.html ${{ secrets.webserver}}:/home/ubuntu/files/
 
-      - name: Send ZAP Scan Results
-        if: env.RISK_LEVELS_PRESENT == 'true'
-        uses: teknatha136/actions-google-chat-text-message@main
-        with:
-          text-message: |
-              ## ZAP Scan Report Summary
+      # - name: Send ZAP Scan Results
+      #   if: env.RISK_LEVELS_PRESENT == 'true'
+      #   uses: teknatha136/actions-google-chat-text-message@main
+      #   with:
+      #     text-message: |
+      #         ## ZAP Scan Report Summary
 
-              | **Severity** | **Alerts** |
-              |--------------|------------|
-              | High         | ${{ env.HIGH_ALERTS }} |
-              | Medium       | ${{ env.MEDIUM_ALERTS }} |
-              | Low          | ${{ env.LOW_ALERTS }} |
+      #         | **Severity** | **Alerts** |
+      #         |--------------|------------|
+      #         | High         | ${{ env.HIGH_ALERTS }} |
+      #         | Medium       | ${{ env.MEDIUM_ALERTS }} |
+      #         | Low          | ${{ env.LOW_ALERTS }} |
 
-              [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      #         [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
-          google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
+      #     google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
