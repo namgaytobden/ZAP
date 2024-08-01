@@ -28,14 +28,19 @@ jobs:
             # Ensure the ZAP scan report is present
             if [ -f "report_html.html" ]; then
               # Extract the relevant alert counts from the HTML report
-              high_alerts=$(grep -a -A1 "High" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
-              medium_alerts=$(grep -a -A1 "Medium" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
-              low_alerts=$(grep -a -A1 "Low" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
+              high_alerts=$(grep -a -A1 "High" report_html.html | grep -oP '(?<=<div>)[0-9]+(?=</div>)')
+              medium_alerts=$(grep -a -A1 "Medium" report_html.html | grep -oP '(?<=<div>)[0-9]+(?=</div>)')
+              low_alerts=$(grep -a -A1 "Low" report_html.html | grep -oP '(?<=<div>)[0-9]+(?=</div>)')
   
-              # Set default values if the variables are empty
+              # Default values if the variables are empty
               high_alerts=${high_alerts:-0}
               medium_alerts=${medium_alerts:-0}
               low_alerts=${low_alerts:-0}
+  
+              # Ensure all values are integers
+              if ! [[ "$high_alerts" =~ ^[0-9]+$ ]]; then high_alerts=0; fi
+              if ! [[ "$medium_alerts" =~ ^[0-9]+$ ]]; then medium_alerts=0; fi
+              if ! [[ "$low_alerts" =~ ^[0-9]+$ ]]; then low_alerts=0; fi
   
               # Output the counts for use in the next step
               echo "HIGH_ALERTS=${high_alerts}" >> $GITHUB_ENV
