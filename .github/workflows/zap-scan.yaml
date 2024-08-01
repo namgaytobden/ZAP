@@ -58,10 +58,14 @@ jobs:
         uses: teknatha136/actions-google-chat-text-message@main
         with:
           text-message: |
-            ZAP Scan Report Summary:
-            - High: ${{ env.HIGH_ALERTS }}
-            - Medium: ${{ env.MEDIUM_ALERTS }}
-            - Low: ${{ env.LOW_ALERTS }}
+              ### ZAP Scan Report Summary
 
-            [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              | **Severity** | **Alerts** |
+              |--------------|------------|
+              | High         | ${{ env.HIGH_ALERTS }} |
+              | Medium       | ${{ env.MEDIUM_ALERTS }} |
+              | Low          | ${{ env.LOW_ALERTS }} |
+
+              [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
           google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
