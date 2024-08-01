@@ -38,7 +38,7 @@ jobs:
             echo "LOW_ALERTS=${low_alerts}" >> $GITHUB_ENV
 
             # Determine if any alerts are present
-            if [ "$high_alerts" -gt 0 ]; then
+            if [ "$high_alerts" -gt 0 ] || [ "$medium_alerts" -gt 0 ] || [ "$low_alerts" -gt 0 ]; then
               echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
             else
               echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
