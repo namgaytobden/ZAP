@@ -10,7 +10,8 @@ jobs:
         with:
           ref: master
       - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.10.0
+        id: 'zap-scan'
+        uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'ghcr.io/zaproxy/zaproxy:stable'
@@ -19,3 +20,20 @@ jobs:
           cmd_options: '-a'
           allow_issue_writing: "false"
           fail_action: "false"
+          report_file: 'zap_scan_report.html'
+
+      - name: Upload ZAP Scan Report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: zap-scan-report
+          path: zap_scan_report.html
+
+      - name: Send ZAP Scan Results
+        if: steps.zap-scan.outcome == 'success'
+        uses: teknatha136/actions-google-chat-text-message@main
+        with:
+          text-message: |
+            ZAP Scan Report:
+            [Download ZAP Scan Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
