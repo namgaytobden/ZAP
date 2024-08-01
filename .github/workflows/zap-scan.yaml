@@ -23,9 +23,6 @@ jobs:
           fail_action: "false"
           report_file: 'report_html.html'  # Save report to this file
 
-      - name: List Files for Debugging
-        run: ls -alh
-
       - name: Check for High, Medium, Low Alerts
         id: check-alerts
         run: |
