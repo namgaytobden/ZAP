@@ -28,9 +28,9 @@ jobs:
             # Ensure the ZAP scan report is present
             if [ -f "report_html.html" ]; then
               # Extract the relevant alert counts from the HTML report
-              high_alerts=$(grep -A1 "High" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
-              medium_alerts=$(grep -A1 "Medium" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
-              low_alerts=$(grep -A1 "Low" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
+              high_alerts=$(grep -a -A1 "High" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
+              medium_alerts=$(grep -a -A1 "Medium" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
+              low_alerts=$(grep -a -A1 "Low" report_html.html | awk -F'[<>]' '/<div>/{print $3}')
   
               # Set default values if the variables are empty
               high_alerts=${high_alerts:-0}
