@@ -36,6 +36,10 @@ jobs:
             medium_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "Medium" | awk '{print $4}')
             low_alerts=$(grep -a -C7 "## Summary of Alerts" report_md.md | grep "Low" | awk '{print $4}')
 
+            echo "HIGH_ALERTS=${high_alerts}" >> $GITHUB_ENV
+            echo "MEDIUM_ALERTS=${medium_alerts}" >> $GITHUB_ENV
+            echo "LOW_ALERTS=${low_alerts}" >> $GITHUB_ENV
+
             # Determine if any alerts are present
             if [ "$high_alerts" -gt 0 ] || [ "$medium_alerts" -gt 0 ] || [ "$low_alerts" -gt 0 ]; then
               echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
@@ -52,6 +56,10 @@ jobs:
         uses: teknatha136/actions-google-chat-text-message@main
         with:
           text-message: |
-            ZAP Scan Report detected High, Medium, or Low risk levels.
+            ZAP Scan Report Summary:
+            - High: ${{ env.HIGH_ALERTS }}
+            - Medium: ${{ env.MEDIUM_ALERTS }}
+            - Low: ${{ env.LOW_ALERTS }}
+
             [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
           google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
