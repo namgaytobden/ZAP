@@ -23,9 +23,6 @@ jobs:
           fail_action: "false"
           report_file: 'report_html.html'  # Save report to this file
 
-      - name: List Files for Debugging
-        run: ls -alh
-
       - name: Check for High, Medium, Low Alerts
         id: check-alerts
         run: |
@@ -40,7 +37,6 @@ jobs:
             echo "MEDIUM_ALERTS=${medium_alerts}" >> $GITHUB_ENV
             echo "LOW_ALERTS=${low_alerts}" >> $GITHUB_ENV
 
-            # Determine if any alerts are present
             if [ "$high_alerts" -gt 0 ] || [ "$medium_alerts" -gt 0 ] || [ "$low_alerts" -gt 0 ]; then
               echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
             else
