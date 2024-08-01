@@ -21,7 +21,7 @@ jobs:
           cmd_options: '-a'
           allow_issue_writing: "false"
           fail_action: "false"
-          report_file: 'report_html.html'  # Save report to this file
+          report_file: 'report_html.html' 
 
       - name: Check for High, Medium, Low Alerts
         id: check-alerts
