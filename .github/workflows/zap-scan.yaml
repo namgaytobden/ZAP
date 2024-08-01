@@ -21,23 +21,25 @@ jobs:
           allow_issue_writing: "false"
           fail_action: "false"
           report_file: 'zap_scan_report.html'
+      - name: List Files for Debugging
+        run: ls -alh
 
-      - name: Check for High, Medium, Low Alerts
-        id: check-alerts
-        run: |
-          # Extract the relevant data from the ZAP report
-          grep -iE 'High|Medium|Low' zap_scan_report.html > alerts.txt || true
-          if [ -s alerts.txt ]; then
-            echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
-          else
-            echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
-          fi
+      # - name: Check for High, Medium, Low Alerts
+      #   id: check-alerts
+      #   run: |
+      #     # Extract the relevant data from the ZAP report
+      #     grep -iE 'High|Medium|Low' zap_scan_report.html > alerts.txt || true
+      #     if [ -s alerts.txt ]; then
+      #       echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
+      #     else
+      #       echo "RISK_LEVELS_PRESENT=false" >> $GITHUB_ENV
+      #     fi
           
-      - name: Send ZAP Scan Results
-        if: env.RISK_LEVELS_PRESENT == 'true'
-        uses: teknatha136/actions-google-chat-text-message@main
-        with:
-          text-message: |
-            ZAP Scan Report detected High, Medium, or Low risk levels.
-            [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
+      # - name: Send ZAP Scan Results
+      #   if: env.RISK_LEVELS_PRESENT == 'true'
+      #   uses: teknatha136/actions-google-chat-text-message@main
+      #   with:
+      #     text-message: |
+      #       ZAP Scan Report detected High, Medium, or Low risk levels.
+      #       [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      #     google-chat-webhook: ${{ secrets.CHAT_WEBHOOK }}
