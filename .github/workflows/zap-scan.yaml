@@ -1,3 +1,4 @@
+name: PEN TEST
 on:
   workflow_dispatch:
     inputs:
