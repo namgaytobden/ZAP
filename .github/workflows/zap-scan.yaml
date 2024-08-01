@@ -58,7 +58,7 @@ jobs:
         uses: teknatha136/actions-google-chat-text-message@main
         with:
           text-message: |
-              ### ZAP Scan Report Summary
+              ## ZAP Scan Report Summary
 
               | **Severity** | **Alerts** |
               |--------------|------------|
