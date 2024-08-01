@@ -20,13 +20,13 @@ jobs:
           cmd_options: '-a'
           allow_issue_writing: "false"
           fail_action: "false"
-          report_file: 'zap_scan_report_${{ github.sha }}.html'
+          report_file: 'zap_scan_report.html'
 
       - name: Check for High, Medium, Low Alerts
         id: check-alerts
         run: |
           # Extract the relevant data from the ZAP report
-          grep -iE 'High|Medium|Low' zap_scan_report_${{ github.sha }}.html > alerts.txt || true
+          grep -iE 'High|Medium|Low' zap_scan_report.html > alerts.txt || true
           if [ -s alerts.txt ]; then
             echo "RISK_LEVELS_PRESENT=true" >> $GITHUB_ENV
           else
