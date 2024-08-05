@@ -27,7 +27,5 @@ Once triggered, the action will:
 2. Summarize the findings in an email.
 3. Send the email to the provided address with the test results.
 
-<video width="320" height="240" autoplay loop muted>
-  <source src="docs/loop.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+![Looping Video](docs/loop.gif)
+
