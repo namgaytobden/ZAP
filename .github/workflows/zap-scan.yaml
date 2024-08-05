@@ -74,13 +74,12 @@ jobs:
           subject: PEN TEST RESULTS
           attachment: 'report_html.html'
           mail: |
-               ## ZAP Scan Report Summary
+                Hi there,
 
-               | **Severity** | **Alerts** |
-               |--------------|------------|
-               | High         | ${{ env.HIGH_ALERTS }} |
-               | Medium       | ${{ env.MEDIUM_ALERTS }} |
-               | Low          | ${{ env.LOW_ALERTS }} |
+                Please find the summary of the recent ZAP scan below:
 
-               [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                Severity Levels and Number of Alerts:
+                - High: ${{ env.HIGH_ALERTS }}
+                - Medium: ${{ env.MEDIUM_ALERTS }}
+                - Low: ${{ env.LOW_ALERTS }}
 
