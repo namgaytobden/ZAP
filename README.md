@@ -14,7 +14,7 @@ This custom GitHub Action leverages the ZAP (Zed Attack Proxy) tool to perform p
 To manually trigger this action, follow these steps:
 
 1. **Navigate to the Actions tab** of this GitHub repository.
-2. **Select the ZAP Penetration Test Action** from the list of available workflows.
+2. **Select the PEN Test Action** from the list of available workflows.
 3. **Provide the required inputs:**
     - **Email:** The email address where you want to receive the test results.
     - **Web URL:** The URL of the website you want to test.
